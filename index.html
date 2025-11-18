@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Employee ID Card & QR Generator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- QRCode.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 20px;
+    }
+
+    .box {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 6px 8px;
+      margin-top: 3px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 50px;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      cursor: pointer;
+      background: #2563eb;
+      color: #fff;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    /* ID card design */
+    .id-card-wrapper {
+      display: flex;
+      justify-content: center;
+    }
+
+    .id-card {
+      width: 360px;
+      border-radius: 12px;
+      border: 2px solid #111827;
+      overflow: hidden;
+      background: #e5f0ff;
+      display: flex;
+      flex-direction: column;
+      font-size: 13px;
+    }
+
+    .id-header {
+      background: #111827;
+      color: #fff;
+      text-align: center;
+      padding: 8px;
+      font-weight: bold;
+      font-size: 15px;
+    }
+
+    .id-body {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      padding: 10px;
+      gap: 8px;
+    }
+
+    .id-photo-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .id-photo-box img {
+      width: 100px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #4b5563;
+      background: #fff;
+    }
+
+    .id-details {
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .id-row {
+      margin-bottom: 4px;
+    }
+
+    .label {
+      font-weight: bold;
+    }
+
+    .id-footer {
+      border-top: 1px solid #9ca3af;
+      padding: 6px 10px 10px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+    }
+
+    .sign-block {
+      text-align: center;
+      width: 48%;
+    }
+
+    .sign-block img {
+      width: 100px;
+      height: 40px;
+      object-fit: contain;
+      border-bottom: 1px solid #4b5563;
+    }
+
+    .sign-label {
+      margin-top: 2px;
+    }
+
+    #qrcode {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .note {
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Employee ID Card & QR Code Generator</h1>
+
+  <div class="container">
+    <!-- Left: Form -->
+    <div class="box" id="form-box">
+      <h2>Enter Employee Details</h2>
+
+      <label>Card Number</label>
+      <input type="text" id="cardNo" placeholder="Ex: ID-001" />
+
+      <label>Employee Name</label>
+      <input type="text" id="name" placeholder="Full Name" />
+
+      <label>Designation</label>
+      <input type="text" id="designation" placeholder="Ex: Manager" />
+
+      <label>Department</label>
+      <input type="text" id="department" placeholder="Ex: HR" />
+
+      <label>Employee ID</label>
+      <input type="text" id="employeeId" placeholder="Employee ID" />
+
+      <label>Date of Birth</label>
+      <input type="date" id="dob" />
+
+      <label>Address</label>
+      <textarea id="address" placeholder="Address"></textarea>
+
+      <label>Identification Mark</label>
+      <input type="text" id="idMark" placeholder="Ex: Mole on right cheek" />
+
+      <label>Blood Group</label>
+      <input type="text" id="bloodGroup" placeholder="Ex: B+ve" />
+
+      <label>Issue Date</label>
+      <input type="date" id="issueDate" />
+
+      <label>Validity (Till Date)</label>
+      <input type="date" id="validity" />
+
+      <hr />
+
+      <h3>Photo & Signatures (Image URLs)</h3>
+      <p class="note">
+        Paste online image links (starting with <b>http://</b> or <b>https://</b>).  
+        If images are only on your laptop, others cannot see them from QR.
+      </p>
+
+      <label>Employee Photograph URL</label>
+      <input type="text" id="photoUrl" placeholder="https://example.com/photo.jpg" />
+
+      <label>Employee Signature URL</label>
+      <input type="text" id="empSignUrl" placeholder="https://example.com/emp-sign.png" />
+
+      <label>Issuing Authority Signature URL</label>
+      <input type="text" id="authSignUrl" placeholder="https://example.com/auth-sign.png" />
+
+      <button onclick="generateCardAndQR()">Generate Card & QR</button>
+      <p class="note">
+        After hosting this file online (GitHub Pages, Netlify, etc.),  
+        scanning the QR will open this page and show the card with photo.
+      </p>
+    </div>
+
+    <!-- Right: Card preview & QR -->
+    <div class="box">
+      <h2>Preview & QR Code</h2>
+
+      <div class="id-card-wrapper">
+        <div class="id-card" id="id-card">
+          <div class="id-header">EMPLOYEE ID CARD</div>
+
+          <div class="id-body">
+            <div class="id-photo-box">
+              <img id="displayPhoto" src="" alt="Employee Photo" />
+            </div>
+            <div class="id-details">
+              <div class="id-row"><span class="label">Card No: </span><span id="displayCardNo"></span></div>
+              <div class="id-row"><span class="label">Name: </span><span id="displayName"></span></div>
+              <div class="id-row"><span class="label">Designation: </span><span id="displayDesignation"></span></div>
+              <div class="id-row"><span class="label">Department: </span><span id="displayDepartment"></span></div>
+              <div class="id-row"><span class="label">Employee ID: </span><span id="displayEmployeeId"></span></div>
+              <div class="id-row"><span class="label">DOB: </span><span id="displayDob"></span></div>
+              <div class="id-row"><span class="label">Blood Group: </span><span id="displayBloodGroup"></span></div>
+              <div class="id-row"><span class="label">Issue Date: </span><span id="displayIssueDate"></span></div>
+              <div class="id-row"><span class="label">Valid Till: </span><span id="displayValidity"></span></div>
+              <div class="id-row"><span class="label">ID Mark: </span><span id="displayIdMark"></span></div>
+              <div class="id-row"><span class="label">Address: </span><span id="displayAddress"></span></div>
+            </div>
+          </div>
+
+          <div class="id-footer">
+            <div class="sign-block">
+              <img id="displayEmpSign" src="" alt="Employee Signature" />
+              <div class="sign-label">Employee Signature</div>
+            </div>
+            <div class="sign-block">
+              <img id="displayAuthSign" src="" alt="Authority Signature" />
+              <div class="sign-label">Issuing Authority</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="text-align:center; margin-top:15px;">QR Code</h3>
+      <div id="qrcode"></div>
+      <p class="note" style="text-align:center;">
+        Scan this QR with a mobile.  
+        It will open this page with all details + photos.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    function getQueryParam(name) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(name);
+    }
+
+    function fillCardFromData(data) {
+      document.getElementById('displayCardNo').textContent = data.cardNo || "";
+      document.getElementById('displayName').textContent = data.name || "";
+      document.getElementById('displayDesignation').textContent = data.designation || "";
+      document.getElementById('displayDepartment').textContent = data.department || "";
+      document.getElementById('displayEmployeeId').textContent = data.employeeId || "";
+      document.getElementById('displayDob').textContent = data.dob || "";
+      document.getElementById('displayBloodGroup').textContent = data.bloodGroup || "";
+      document.getElementById('displayIssueDate').textContent = data.issueDate || "";
+      document.getElementById('displayValidity').textContent = data.validity || "";
+      document.getElementById('displayIdMark').textContent = data.idMark || "";
+      document.getElementById('displayAddress').textContent = data.address || "";
+
+      document.getElementById('displayPhoto').src = data.photoUrl || "";
+      document.getElementById('displayEmpSign').src = data.empSignUrl || "";
+      document.getElementById('displayAuthSign').src = data.authSignUrl || "";
+    }
+
+    function generateCardAndQR() {
+      // Collect form values
+      const data = {
+        cardNo: document.getElementById('cardNo').value,
+        name: document.getElementById('name').value,
+        designation: document.getElementById('designation').value,
+        department: document.getElementById('department').value,
+        employeeId: document.getElementById('employeeId').value,
+        dob: document.getElementById('dob').value,
+        address: document.getElementById('address').value,
+        idMark: document.getElementById('idMark').value,
+        bloodGroup: document.getElementById('bloodGroup').value,
+        issueDate: document.getElementById('issueDate').value,
+        validity: document.getElementById('validity').value,
+        photoUrl: document.getElementById('photoUrl').value,
+        empSignUrl: document.getElementById('empSignUrl').value,
+        authSignUrl: document.getElementById('authSignUrl').value
+      };
+
+      // Update card preview immediately
+      fillCardFromData(data);
+
+      // Build URL with data in query string
+      const json = JSON.stringify(data);
+      const baseUrl = window.location.origin + window.location.pathname;
+      const fullUrl = baseUrl + "?data=" + encodeURIComponent(json);
+
+      // Generate QR
+      const qrDiv = document.getElementById("qrcode");
+      qrDiv.innerHTML = ""; // clear old
+      new QRCode(qrDiv, {
+        text: fullUrl,
+        width: 180,
+        height: 180
+      });
+    }
+
+    // When page is opened from QR (with ?data=...)
+    window.addEventListener("DOMContentLoaded", function() {
+      const dataParam = getQueryParam("data");
+      if (dataParam) {
+        try {
+          const data = JSON.parse(decodeURIComponent(dataParam));
+          fillCardFromData(data);
+
+          // Also show QR of current URL (for re-sharing if needed)
+          const qrDiv = document.getElementById("qrcode");
+          qrDiv.innerHTML = "";
+          new QRCode(qrDiv, {
+            text: window.location.href,
+            width: 180,
+            height: 180
+          });
+        } catch (e) {
+          console.error("Error reading data from URL:", e);
+        }
+      }
+    });
+  </script>
+</body>
+</html>
