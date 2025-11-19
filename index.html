@@ -294,6 +294,19 @@
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name);
     }
+        function normalizeImageUrl(url) {
+      if (!url) return "";
+      url = url.trim();
+
+      // If user pasted a GitHub "blob" link, convert it automatically to RAW
+      if (url.includes("github.com") && url.includes("/blob/")) {
+        url = url.replace("https://github.com/", "https://raw.githubusercontent.com/");
+        url = url.replace("/blob/", "/");
+      }
+
+      return url;
+    }
+
 
     function fillCardFromData(data) {
       document.getElementById('displayCardNo').textContent = data.cardNo || "";
@@ -327,9 +340,10 @@
         bloodGroup: document.getElementById('bloodGroup').value,
         issueDate: document.getElementById('issueDate').value,
         validity: document.getElementById('validity').value,
-        photoUrl: document.getElementById('photoUrl').value,
-        empSignUrl: document.getElementById('empSignUrl').value,
-        authSignUrl: document.getElementById('authSignUrl').value
+        photoUrl: normalizeImageUrl(document.getElementById('photoUrl').value),
+        empSignUrl: normalizeImageUrl(document.getElementById('empSignUrl').value),
+        authSignUrl: normalizeImageUrl(document.getElementById('authSignUrl').value)
+
       };
 
       // Update card preview immediately
@@ -374,4 +388,5 @@
   </script>
 </body>
 </html>
+
 
