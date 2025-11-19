@@ -355,14 +355,21 @@
       const fullUrl = baseUrl + "?data=" + encodeURIComponent(json);
 
       // Generate QR
-      const qrDiv = document.getElementById("qrcode");
-      qrDiv.innerHTML = ""; // clear old
-      new QRCode(qrDiv, {
-        text: fullUrl,
-        width: 180,
-        height: 180
-      });
-    }
+        // Generate QR
+  const qrDiv = document.getElementById("qrcode");
+  qrDiv.innerHTML = ""; // clear old
+  new QRCode(qrDiv, {
+    text: fullUrl,
+    width: 220,
+    height: 220
+  });
+
+  // NEW: show the link inside the QR
+  const qrLinkInput = document.getElementById("qrLink");
+  if (qrLinkInput) {
+    qrLinkInput.value = fullUrl;
+  }
+}
 
     // When page is opened from QR (with ?data=...)
     window.addEventListener("DOMContentLoaded", function() {
@@ -388,5 +395,6 @@
   </script>
 </body>
 </html>
+
 
 
